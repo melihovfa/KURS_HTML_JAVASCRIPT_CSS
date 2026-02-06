@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Динозаврик - Игра</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .game-header {
+            background: linear-gradient(135deg, #4361ee, #3a56d4);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .game-canvas-container {
+            position: relative;
+            background: #f0f0f0;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 400px;
+            display: block;
+            background: #f7f7f7;
+            cursor: pointer;
+        }
+
+        .game-controls {
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .game-btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 160px;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-btn:active {
+            transform: translateY(0);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            color: white;
+        }
+
+        .pause-btn {
+            background: linear-gradient(135deg, #ffbd2e, #ff9e1a);
+            color: white;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #f72585, #e11575);
+            color: white;
+        }
+
+        .game-instructions {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+            z-index: 100;
+        }
+
+        .game-instructions h2 {
+            color: #4361ee;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .game-instructions p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .instructions-btn {
+            background: #4361ee;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .instructions-btn:hover {
+            background: #3a56d4;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .mobile-controls {
+            display: none;
+            padding: 20px;
+            background: #f8f9fa;
+            justify-content: space-around;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .mobile-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #4361ee, #3a56d4);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
+        }
+
+        .duck-btn {
+            background: linear-gradient(135deg, #f72585, #e11575);
+        }
+
+        @media (max-width: 768px) {
+            .game-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .game-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .stat-value {
+                font-size: 24px;
+            }
+            
+            .game-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .game-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .mobile-controls {
+                display: flex;
+            }
+            
+            #gameCanvas {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .game-title {
+                font-size: 20px;
+            }
+            
+            .stat-value {
+                font-size: 20px;
+            }
+            
+            #gameCanvas {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="game-title">🦖 ДИНОЗАВРИК</div>
+            <div class="game-stats">
+                <div class="stat">
+                    <div class="stat-label">Очки</div>
+                    <div id="score" class="stat-value">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Рекорд</div>
+                    <div id="highScore" class="stat-value">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Скорость</div>
+                    <div id="speed" class="stat-value">6</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-canvas-container">
+            <canvas id="gameCanvas"></canvas>
+            <div class="game-instructions" id="instructions">
+                <h2>🦖 Динозаврик</h2>
+                <p>Избегайте кактусов, прыгайте и приседайте!<br>Управление:<br>• ПРОБЕЛ или ↑ - Прыжок<br>• ↓ - Присесть<br>• P - Пауза<br>• R - Заново</p>
+                <button class="instructions-btn" onclick="startGame()">ИГРАТЬ</button>
+            </div>
+        </div>
+        
+        <div class="game-controls">
+            <button id="startBtn" class="game-btn start-btn" onclick="startGame()">
+                ▶️ Начать игру
+            </button>
+            <button id="pauseBtn" class="game-btn pause-btn" onclick="togglePause()">
+                ⏸️ Пауза
+            </button>
+            <button id="restartBtn" class="game-btn restart-btn" onclick="restartGame()">
+                🔄 Заново
+            </button>
+        </div>
+        
+        <div class="mobile-controls">
+            <button id="jumpBtn" class="mobile-btn" onmousedown="jump()" ontouchstart="jump()">
+                ↑
+            </button>
+            <button id="duckBtn" class="mobile-btn duck-btn" 
+                    onmousedown="duck(true)" onmouseup="duck(false)"
+                    ontouchstart="duck(true)" ontouchend="duck(false)">
+                ↓
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация игры
+        class DinoGame {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                
+                // Размеры канваса
+                this.canvas.width = 800;
+                this.canvas.height = 400;
+                
+                // Игровые переменные
+                this.score = 0;
+                this.highScore = localStorage.getItem('dinoHighScore') || 0;
+                this.gameSpeed = 6;
+                this.isGameOver = false;
+                this.isPaused = false;
+                this.isStarted = false;
+                
+                // Динозаврик
+                this.dino = {
+                    x: 80,
+                    y: this.canvas.height - 100,
+                    width: 60,
+                    height: 70,
+                    color: '#555',
+                    isJumping: false,
+                    isDucking: false,
+                    jumpVelocity: 0,
+                    gravity: 0.8,
+                    jumpPower: -15,
+                    duckHeight: 40,
+                    normalHeight: 70
+                };
+                
+                // Кактусы
+                this.cacti = [];
+                this.cactusTimer = 0;
+                this.cactusInterval = 100;
+                
+                // Облака
+                this.clouds = [];
+                this.cloudTimer = 0;
+                
+                // Земля
+                this.groundX = 0;
+                
+                // Анимация
+                this.lastTime = 0;
+                this.gameLoopId = null;
+                
+                // Звуки
+                this.sounds = {
+                    jump: new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA=='),
+                    hit: new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==')
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                // Создаем начальные облака
+                for (let i = 0; i < 3; i++) {
+                    this.addCloud();
+                }
+                
+                this.updateHighScore();
+                this.gameLoop();
+            }
+            
+            gameLoop(timestamp) {
+                if (!this.lastTime) this.lastTime = timestamp;
+                const deltaTime = timestamp - this.lastTime;
+                this.lastTime = timestamp;
+                
+                if (!this.isPaused && this.isStarted && !this.isGameOver) {
+                    this.update(deltaTime);
+                }
+                
+                this.draw();
+                this.gameLoopId = requestAnimationFrame(this.gameLoop.bind(this));
+            }
+            
+            update(deltaTime) {
+                // Обновление динозаврика
+                if (this.dino.isJumping) {
+                    this.dino.y += this.dino.jumpVelocity;
+                    this.dino.jumpVelocity += this.dino.gravity;
+                    
+                    if (this.dino.y >= this.canvas.height - 100) {
+                        this.dino.y = this.canvas.height - 100;
+                        this.dino.isJumping = false;
+                        this.dino.jumpVelocity = 0;
+                    }
+                }
+                
+                // Обновление кактусов
+                for (let i = this.cacti.length - 1; i >= 0; i--) {
+                    this.cacti[i].x -= this.gameSpeed;
+                    
+                    if (this.cacti[i].x + this.cacti[i].width < 0) {
+                        this.cacti.splice(i, 1);
+                    }
+                }
+                
+                // Обновление облаков
+                for (let i = this.clouds.length - 1; i >= 0; i--) {
+                    this.clouds[i].x -= this.gameSpeed / 2;
+                    
+                    if (this.clouds[i].x + this.clouds[i].width < 0) {
+                        this.clouds.splice(i, 1);
+                    }
+                }
+                
+                // Обновление земли
+                this.groundX -= this.gameSpeed;
+                if (this.groundX <= -this.canvas.width) {
+                    this.groundX = 0;
+                }
+                
+                // Создание кактусов
+                this.cactusTimer++;
+                if (this.cactusTimer > this.cactusInterval) {
+                    this.addCactus();
+                    this.cactusTimer = 0;
+                    this.cactusInterval = Math.max(40, 100 - Math.floor(this.score / 50) * 5);
+                }
+                
+                // Создание облаков
+                this.cloudTimer++;
+                if (this.cloudTimer > 150) {
+                    this.addCloud();
+                    this.cloudTimer = 0;
+                }
+                
+                // Проверка коллизий
+                this.checkCollisions();
+                
+                // Увеличение счета
+                if (!this.isGameOver) {
+                    this.score += 0.5;
+                    this.updateScore();
+                    
+                    if (Math.floor(this.score) % 100 === 0 && Math.floor(this.score) > 0) {
+                        this.gameSpeed = Math.min(15, 6 + Math.floor(this.score / 100));
+                        this.updateSpeed();
+                    }
+                }
+            }
+            
+            draw() {
+                // Очистка канваса
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Небо
+                const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+                gradient.addColorStop(0, '#87CEEB');
+                gradient.addColorStop(1, '#E0F7FF');
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Солнце
+                this.ctx.beginPath();
+                this.ctx.arc(this.canvas.width - 80, 70, 30, 0, Math.PI * 2);
+                this.ctx.fillStyle = '#FFD700';
+                this.ctx.fill();
+                
+                // Облака
+                for (const cloud of this.clouds) {
+                    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    this.ctx.beginPath();
+                    this.ctx.arc(cloud.x + cloud.width * 0.3, cloud.y + cloud.height * 0.5, cloud.height * 0.5, 0, Math.PI * 2);
+                    this.ctx.arc(cloud.x + cloud.width * 0.7, cloud.y + cloud.height * 0.5, cloud.height * 0.5, 0, Math.PI * 2);
+                    this.ctx.arc(cloud.x + cloud.width * 0.5, cloud.y, cloud.height * 0.5, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+                
+                // Земля
+                this.ctx.fillStyle = '#8B4513';
+                this.ctx.fillRect(0, this.canvas.height - 20, this.canvas.width, 20);
+                
+                // Трава
+                this.ctx.fillStyle = '#2ecc71';
+                for (let i = 0; i < this.canvas.width; i += 20) {
+                    const x = (i + this.groundX) % this.canvas.width;
+                    const height = 8 + Math.sin((x + this.groundX) * 0.1) * 4;
+                    this.ctx.fillRect(x, this.canvas.height - 20, 20, -height);
+                }
+                
+                // Кактусы
+                for (const cactus of this.cacti) {
+                    this.ctx.fillStyle = '#27ae60';
+                    
+                    if (cactus.type === 0) {
+                        this.ctx.fillRect(cactus.x, cactus.y, cactus.width, cactus.height);
+                    } else if (cactus.type === 1) {
+                        this.ctx.fillRect(cactus.x, cactus.y, cactus.width, cactus.height);
+                        this.ctx.fillRect(cactus.x + cactus.width + 5, cactus.y + 10, cactus.width * 0.7, cactus.height - 10);
+                    } else {
+                        this.ctx.fillRect(cactus.x, cactus.y, cactus.width, cactus.height);
+                        this.ctx.fillRect(cactus.x + cactus.width + 5, cactus.y + 5, cactus.width * 0.8, cactus.height - 5);
+                        this.ctx.fillRect(cactus.x - cactus.width * 0.8 - 5, cactus.y + 15, cactus.width * 0.8, cactus.height - 15);
+                    }
+                }
+                
+                // Динозаврик
+                const dino = this.dino;
+                const height = dino.isDucking ? dino.duckHeight : dino.normalHeight;
+                
+                this.ctx.fillStyle = dino.color;
+                this.ctx.fillRect(dino.x, dino.y, dino.width, height);
+                
+                // Голова
+                this.ctx.beginPath();
+                this.ctx.arc(dino.x + dino.width, dino.y + 15, 15, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Глаз
+                this.ctx.fillStyle = 'white';
+                this.ctx.beginPath();
+                this.ctx.arc(dino.x + dino.width + 5, dino.y + 12, 4, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.fillStyle = 'black';
+                this.ctx.beginPath();
+                this.ctx.arc(dino.x + dino.width + 6, dino.y + 11, 2, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Ноги
+                this.ctx.fillStyle = dino.color;
+                if (!dino.isDucking) {
+                    const legOffset = Math.sin(Date.now() * 0.01) * 5;
+                    this.ctx.fillRect(dino.x + 10, dino.y + height, 15, 20);
+                    this.ctx.fillRect(dino.x + 35, dino.y + height + legOffset, 15, 20);
+                } else {
+                    this.ctx.fillRect(dino.x + 10, dino.y + height, 15, 10);
+                    this.ctx.fillRect(dino.x + 35, dino.y + height, 15, 10);
+                }
+                
+                // Хвост
+                this.ctx.beginPath();
+                this.ctx.moveTo(dino.x, dino.y + 20);
+                this.ctx.lineTo(dino.x - 20, dino.y + 15);
+                this.ctx.lineTo(dino.x - 10, dino.y + 30);
+                this.ctx.closePath();
+                this.ctx.fill();
+                
+                // Game Over
+                if (this.isGameOver) {
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                    this.ctx.fillRect(this.canvas.width / 2 - 150, this.canvas.height / 2 - 80, 300, 160);
+                    
+                    this.ctx.fillStyle = '#ff6b6b';
+                    this.ctx.font = 'bold 36px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText('GAME OVER', this.canvas.width / 2, this.canvas.height / 2 - 30);
+                    
+                    this.ctx.fillStyle = 'white';
+                    this.ctx.font = '20px Arial';
+                    this.ctx.fillText(`Счет: ${Math.floor(this.score)}`, this.canvas.width / 2, this.canvas.height / 2 + 10);
+                    this.ctx.fillText(`Рекорд: ${Math.floor(this.highScore)}`, this.canvas.width / 2, this.canvas.height / 2 + 40);
+                    
+                    this.ctx.font = '16px Arial';
+                    this.ctx.fillText('Нажмите "Заново"', this.canvas.width / 2, this.canvas.height / 2 + 70);
+                }
+            }
+            
+            addCactus() {
+                const height = 40 + Math.random() * 40;
+                const type = Math.floor(Math.random() * 3);
+                
+                this.cacti.push({
+                    x: this.canvas.width,
+                    y: this.canvas.height - height - 20,
+                    width: 20 + Math.random() * 15,
+                    height: height,
+                    type: type
+                });
+            }
+            
+            addCloud() {
+                const size = 20 + Math.random() * 20;
+                this.clouds.push({
+                    x: this.canvas.width,
+                    y: 30 + Math.random() * 100,
+                    width: size * 3,
+                    height: size
+                });
+            }
+            
+            checkCollisions() {
+                const dino = this.dino;
+                const dinoHeight = dino.isDucking ? dino.duckHeight : dino.normalHeight;
+                
+                for (const cactus of this.cacti) {
+                    if (dino.x < cactus.x + cactus.width &&
+                        dino.x + dino.width > cactus.x &&
+                        dino.y < cactus.y + cactus.height &&
+                        dino.y + dinoHeight > cactus.y) {
+                        this.gameOver();
+                        break;
+                    }
+                }
+            }
+            
+            jump() {
+                if (!this.dino.isJumping && !this.isGameOver && this.isStarted) {
+                    this.dino.isJumping = true;
+                    this.dino.jumpVelocity = this.dino.jumpPower;
+                    this.dino.isDucking = false;
+                    // Воспроизведение звука прыжка
+                    if (this.sounds.jump) {
+                        this.sounds.jump.currentTime = 0;
+                        this.sounds.jump.play().catch(() => {});
+                    }
+                }
+            }
+            
+            duck(start) {
+                if (!this.dino.isJumping && !this.isGameOver && this.isStarted) {
+                    this.dino.isDucking = start;
+                }
+            }
+            
+            start() {
+                if (!this.isStarted) {
+                    this.isStarted = true;
+                    this.isPaused = false;
+                    this.isGameOver = false;
+                    this.lastTime = 0;
+                    document.getElementById('instructions').style.display = 'none';
+                } else if (this.isPaused) {
+                    this.isPaused = false;
+                    this.lastTime = 0;
+                }
+            }
+            
+            togglePause() {
+                if (this.isStarted && !this.isGameOver) {
+                    this.isPaused = !this.isPaused;
+                    return this.isPaused;
+                }
+                return false;
+            }
+            
+            restart() {
+                this.score = 0;
+                this.gameSpeed = 6;
+                this.isGameOver = false;
+                this.isPaused = false;
+                this.isStarted = true;
+                this.lastTime = 0;
+                
+                this.dino = {
+                    x: 80,
+                    y: this.canvas.height - 100,
+                    width: 60,
+                    height: 70,
+                    color: '#555',
+                    isJumping: false,
+                    isDucking: false,
+                    jumpVelocity: 0,
+                    gravity: 0.8,
+                    jumpPower: -15,
+                    duckHeight: 40,
+                    normalHeight: 70
+                };
+                
+                this.cacti = [];
+                this.cactusTimer = 0;
+                this.cactusInterval = 100;
+                
+                this.updateScore();
+                this.updateSpeed();
+                document.getElementById('instructions').style.display = 'none';
+            }
+            
+            gameOver() {
+                this.isGameOver = true;
+                this.isStarted = false;
+                
+                // Воспроизведение звука столкновения
+                if (this.sounds.hit) {
+                    this.sounds.hit.currentTime = 0;
+                    this.sounds.hit.play().catch(() => {});
+                }
+                
+                if (this.score > this.highScore) {
+                    this.highScore = this.score;
+                    localStorage.setItem('dinoHighScore', this.highScore);
+                    this.updateHighScore();
+                }
+            }
+            
+            updateScore() {
+                document.getElementById('score').textContent = Math.floor(this.score);
+            }
+            
+            updateHighScore() {
+                document.getElementById('highScore').textContent = Math.floor(this.highScore);
+            }
+            
+            updateSpeed() {
+                document.getElementById('speed').textContent = this.gameSpeed;
+            }
+            
+            destroy() {
+                if (this.gameLoopId) {
+                    cancelAnimationFrame(this.gameLoopId);
+                }
+            }
+        }
+
+        // Глобальные переменные
+        let game = null;
+
+        // Инициализация при загрузке
+        window.addEventListener('load', () => {
+            const canvas = document.getElementById('gameCanvas');
+            game = new DinoGame(canvas);
+            
+            // Адаптация размера канваса
+            function resizeCanvas() {
+                const container = canvas.parentElement;
+                const containerWidth = container.clientWidth;
+                const scale = containerWidth / 800;
+                canvas.style.width = containerWidth + 'px';
+                canvas.style.height = (400 * scale) + 'px';
+            }
+            
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            
+            // Клик по канвасу для начала игры
+            canvas.addEventListener('click', () => {
+                if (!game.isStarted) {
+                    startGame();
+                }
+            });
+        });
+
+        // Глобальные функции управления
+        function startGame() {
+            if (game) {
+                game.start();
+                document.getElementById('instructions').style.display = 'none';
+            }
+        }
+
+        function togglePause() {
+            if (game) {
+                const isPaused = game.togglePause();
+                const pauseBtn = document.getElementById('pauseBtn');
+                pauseBtn.innerHTML = isPaused ? '▶️ Продолжить' : '⏸️ Пауза';
+            }
+        }
+
+        function restartGame() {
+            if (game) {
+                game.restart();
+            }
+        }
+
+        function jump() {
+            if (game) {
+                game.jump();
+            }
+        }
+
+        function duck(start) {
+            if (game) {
+                game.duck(start);
+            }
+        }
+
+        // Управление с клавиатуры
+        document.addEventListener('keydown', (e) => {
+            if (!game) return;
+            
+            switch (e.code) {
+                case 'Space':
+                case 'ArrowUp':
+                    e.preventDefault();
+                    if (!game.isStarted) {
+                        startGame();
+                    }
+                    game.jump();
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    if (!game.isStarted) {
+                        startGame();
+                    }
+                    game.duck(true);
+                    break;
+                case 'KeyP':
+                    e.preventDefault();
+                    const isPaused = game.togglePause();
+                    const pauseBtn = document.getElementById('pauseBtn');
+                    pauseBtn.innerHTML = isPaused ? '▶️ Продолжить' : '⏸️ Пауза';
+                    break;
+                case 'KeyR':
+                    e.preventDefault();
+                    game.restart();
+                    break;
+                case 'Enter':
+                    e.preventDefault();
+                    if (!game.isStarted) {
+                        startGame();
+                    }
+                    break;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (game && e.code === 'ArrowDown') {
+                game.duck(false);
+            }
+        });
+
+        // Предотвращение прокрутки страницы при управлении
+        document.addEventListener('keydown', (e) => {
+            if (['Space', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
+                e.preventDefault();
+            }
+        });
+
+        // Управление для мобильных устройств
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.tagName === 'BUTTON') return;
+            e.preventDefault();
+        }, { passive: false });
+
+        // Информация в консоли
+        console.log('🎮 Игра "Динозаврик" загружена!');
+        console.log('Управление:');
+        console.log('ПРОБЕЛ или ↑ - Прыжок');
+        console.log('↓ - Присесть');
+        console.log('P - Пауза');
+        console.log('R - Заново');
+        console.log('ENTER - Начать игру');
+    </script>
+</body>
+</html>
