@@ -210,6 +210,58 @@ p {
     align-items: center;
     gap: 5px;
 }
+/* Стиль для ссылки-карточки */
+.project-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease;
+}
+
+/* Убираем все подчеркивания внутри карточки */
+.project-card-link * {
+    text-decoration: none !important;
+}
+
+/* Убираем стандартные стили ссылок */
+.project-card-link,
+.project-card-link:hover,
+.project-card-link:focus,
+.project-card-link:active {
+    text-decoration: none !important;
+    outline: none !important;
+    border: none !important;
+}
+
+/* Hover эффект для карточки */
+.project-card-link:hover .project-card {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Убираем подчеркивание у заголовков */
+.project-card-link h3 {
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+/* Убираем подчеркивание у параграфов */
+.project-card-link p {
+    text-decoration: none !important;
+}
+
+/* Убираем подчеркивание у списков */
+.project-card-link ul,
+.project-card-link li {
+    text-decoration: none !important;
+}
+
+/* Убираем подчеркивание при фокусе */
+.project-card-link:focus h3,
+.project-card-link:focus p,
+.project-card-link:focus ul {
+    text-decoration: none !important;
+}
 
 .dropdown-menu {
     position: absolute;
