@@ -3,346 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Курсы программирования HTML, CSS, JavaScript</title>
+    <title>Игра "Динозаврик" - Курсы программирования</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .game-container {
+            max-width: 800px;
+            margin: 100px auto 50px;
+            text-align: center;
+        }
+        
+        .game-title {
+            margin-bottom: 30px;
+        }
+        
+        canvas {
+            border: 2px solid #333;
+            background-color: #f8f9fa;
+            display: block;
+            margin: 0 auto;
+            border-radius: var(--radius);
+        }
+        
+        .game-controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .game-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 30px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+        
+        .back-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
-    <!-- Навигация -->
     <nav class="navbar">
         <div class="container nav-container">
             <div class="nav-menu">
                 <ul class="nav-links">
-                    <li><a href="#home">Главная</a></li>
-                    <li><a href="#about">О курсе</a></li>
-                    <li class="dropdown">
-                        <a href="#projects" class="dropdown-toggle">
-                            Проекты <i class="fas fa-chevron-down"></i>
-                        </a>
-                        <div class="dropdown-menu">
-                            <a href="#clicker" class="dropdown-item">Кликер</a>
-                            <a href="dino.html" class="dropdown-item">Динозаврик</a>
-                            <a href="#snake" class="dropdown-item">Змейка</a>
-                            <a href="#modern-site" class="dropdown-item">Современный сайт</a>
-                        </div>
-                    </li>
-                    <li><a href="#teacher">Преподаватель</a></li>
+                    <li><a href="index.html#home">Главная</a></li>
+                    <li><a href="index.html#projects">Проекты</a></li>
                 </ul>
-                
-                <a href="https://www.mos.ru/pgu2/activity/groups?keyword=2426469" class="btn-register">
-                    Запись на курс
-                </a>
             </div>
-            
-            <button class="menu-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
         </div>
     </nav>
 
-    <!-- Герой секция -->
-    <section class="hero" id="home">
-        <div class="container hero-container">
-            <div class="hero-content">
-                <h1 class="hero-title">Освой самые востребованные языки программирования за 3 месяца</h1>
-                <p class="hero-subtitle">Научитесь создавать современные сайты и веб-приложения с нуля. Практические навыки, которые нужны работодателям.</p>
-                <div class="hero-buttons">
-                    <a href="https://forms.yandex.ru/your-form-link" target="_blank" class="btn-primary">Начать обучение</a>
-                    <a href="#about" class="btn-secondary">Подробнее о курсе</a>
-                </div>
-                <div class="hero-features">
-                    <div class="feature">
-                        <i class="fas fa-laptop-code"></i>
-                        <span>Практические проекты</span>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-user-tie"></i>
-                        <span>Поддержка ментора</span>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-certificate"></i>
-                        <span>Сертификат по окончании</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-css-art">
-                <!-- CSS арт - языки программирования -->
-                <div class="css-art-container">
-                    <div class="code-block html-block">
-                        <div class="code-header">
-                            <div class="code-dots">
-                                <span class="dot red"></span>
-                                <span class="dot yellow"></span>
-                                <span class="dot green"></span>
-                            </div>
-                            <span class="code-title">index.html</span>
-                        </div>
-                        <div class="code-content">
-                            <pre>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;title&gt;Мой сайт&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Привет мир!&lt;/h1&gt;
-    &lt;p&gt;Я создаю сайты&lt;/p&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</pre>
-                        </div>
-                    </div>
-                    
-                    <div class="code-block css-block">
-                        <div class="code-header">
-                            <div class="code-dots">
-                                <span class="dot red"></span>
-                                <span class="dot yellow"></span>
-                                <span class="dot green"></span>
-                            </div>
-                            <span class="code-title">style.css</span>
-                        </div>
-                        <div class="code-content">
-                            <pre>body {
-  background: linear-gradient(
-    135deg, #667eea, #764ba2
-  );
-  color: white;
-  font-family: 'Inter', sans-serif;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}</pre>
-                        </div>
-                    </div>
-                    
-                    <div class="code-block js-block">
-                        <div class="code-header">
-                            <div class="code-dots">
-                                <span class="dot red"></span>
-                                <span class="dot yellow"></span>
-                                <span class="dot green"></span>
-                            </div>
-                            <span class="code-title">script.js</span>
-                        </div>
-                        <div class="code-content">
-                            <pre>document.addEventListener(
-  'DOMContentLoaded', 
-  function() {
-    console.log('Сайт загружен!');
-    
-    const button = document
-      .getElementById('myButton');
-    button.addEventListener('click', 
-      () => {
-        alert('Привет!');
-    });
-});</pre>
-                        </div>
-                    </div>
-                    
-                    <div class="lang-icons">
-                        <div class="lang-icon html-icon">
-                            <i class="fab fa-html5"></i>
-                            <span>HTML5</span>
-                        </div>
-                        <div class="lang-icon css-icon">
-                            <i class="fab fa-css3-alt"></i>
-                            <span>CSS3</span>
-                        </div>
-                        <div class="lang-icon js-icon">
-                            <i class="fab fa-js"></i>
-                            <span>JavaScript</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="game-container container">
+        <h1 class="game-title">Игра "Динозаврик"</h1>
+        <div class="score-display">Счет: <span id="score">0</span></div>
+        <canvas id="gameCanvas" width="800" height="300"></canvas>
+        
+        <div class="game-controls">
+            <button id="startBtn" class="btn-primary">Начать игру</button>
+            <button id="jumpBtn" class="btn-secondary">Прыжок (Пробел)</button>
+            <button id="pauseBtn" class="btn-secondary">Пауза (P)</button>
         </div>
-    </section>
-
-    <!-- О курсе -->
-    <section class="about-section" id="about">
-        <div class="container">
-            <h2 class="section-title">Что вы изучите на курсе</h2>
-            <div class="about-grid">
-                <div class="about-card">
-                    <div class="about-icon">
-                        <i class="fab fa-html5"></i>
-                    </div>
-                    <h3>HTML5</h3>
-                    <p>Современная семантическая верстка, доступность, структура документа, формы и медиа-элементы.</p>
-                </div>
-                <div class="about-card">
-                    <div class="about-icon">
-                        <i class="fab fa-css3-alt"></i>
-                    </div>
-                    <h3>CSS3</h3>
-                    <p>Flexbox, Grid, анимации, адаптивный дизайн, переменные CSS, препроцессоры.</p>
-                </div>
-                <div class="about-card">
-                    <div class="about-icon">
-                        <i class="fab fa-js"></i>
-                    </div>
-                    <h3>JavaScript</h3>
-                    <p>Основы языка, DOM-манипуляции, асинхронность, работа с API, современный ES6+ синтаксис.</p>
-                </div>
-                <div class="about-card">
-                    <div class="about-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h3>Реальные проекты</h3>
-                    <p>Портфолио из 4 проектов, которые можно показать работодателю.</p>
-                </div>
-            </div>
+        
+        <div class="game-info">
+            <h3>Управление:</h3>
+            <p><strong>Пробел</strong> или <strong>Клик</strong> - прыжок</p>
+            <p><strong>P</strong> - пауза</p>
+            <p><strong>R</strong> - перезапуск</p>
+            <p>Избегайте кактусов и увеличивайте свой счет!</p>
         </div>
-    </section>
+        
+        <a href="index.html#projects" class="back-button">← Вернуться к проектам</a>
+    </div>
 
-    <!-- Проекты -->
-    <section class="projects-section" id="projects">
-        <div class="container">
-            <h2 class="section-title">Проекты, которые вы создадите</h2>
-            <p class="section-subtitle">Каждый проект — это шаг к становлению профессиональным разработчиком</p>
+    <script>
+        // Игра "Динозаврик"
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+
+        let score = 0;
+        let gameSpeed = 5;
+        let isGameOver = false;
+        let isPaused = false;
+        let gameFrame = 0;
+
+        // Динозавр
+        const dino = {
+            x: 50,
+            y: 200,
+            width: 40,
+            height: 60,
+            jumping: false,
+            jumpForce: 15,
+            gravity: 0.8,
+            velocity: 0,
             
-            <div class="projects-grid">
-                <div class="project-card" id="clicker">
-                    <div class="project-image">
-                        <i class="fas fa-mouse-pointer"></i>
-                    </div>
-                    <div class="project-content">
-                        <h3>Кликер игра</h3>
-                        <p>Интерактивная игра с подсчетом кликов, улучшениями и системой достижений. Изучите основы JavaScript и работу с DOM.</p>
-                        <ul class="project-tech">
-                            <li>HTML5</li>
-                            <li>CSS3</li>
-                            <li>JavaScript</li>
-                        </ul>
-                    </div>
-                </div>
+            draw() {
+                ctx.fillStyle = '#4361ee';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
                 
-                <div class="project-card" id="dino">
-                    <a href="dino.html" target="_blank" class="project-card-link">
-                        <div class="project-image">
-                            <i class="fas fa-gamepad"></i>
-                        </div>
-                        <div class="project-content">
-                            <h3>Игра "Динозаврик"</h3>
-                            <p>Клон известной игры из Chrome. Реализация игровой физики, коллизий и анимаций на чистом JavaScript.</p>
-                            <ul class="project-tech">
-                                <li>Canvas API</li>
-                                <li>JavaScript</li>
-                                <li>CSS анимации</li>
-                            </ul>
-                            <span class="project-link-hint">Нажмите, чтобы открыть игру →</span>
-                        </div>
-                    </a>
-                </div>
+                // Глаз
+                ctx.fillStyle = 'white';
+                ctx.fillRect(this.x + 30, this.y + 10, 5, 5);
+            },
+            
+            jump() {
+                if (!this.jumping) {
+                    this.jumping = true;
+                    this.velocity = -this.jumpForce;
+                }
+            },
+            
+            update() {
+                if (this.jumping) {
+                    this.y += this.velocity;
+                    this.velocity += this.gravity;
+                    
+                    if (this.y >= 200) {
+                        this.y = 200;
+                        this.jumping = false;
+                        this.velocity = 0;
+                    }
+                }
+            },
+            
+            get bottom() {
+                return this.y + this.height;
+            },
+            
+            get right() {
+                return this.x + this.width;
+            }
+        };
+
+        // Кактусы
+        const cacti = [];
+        const cactusWidth = 20;
+        const minCactusHeight = 30;
+        const maxCactusHeight = 50;
+
+        function createCactus() {
+            const height = Math.random() * (maxCactusHeight - minCactusHeight) + minCactusHeight;
+            cacti.push({
+                x: canvas.width,
+                y: 200 + 60 - height,
+                width: cactusWidth,
+                height: height,
+                passed: false
+            });
+        }
+
+        function drawCacti() {
+            ctx.fillStyle = '#27ca3f';
+            cacti.forEach(cactus => {
+                ctx.fillRect(cactus.x, cactus.y, cactus.width, cactus.height);
+            });
+        }
+
+        function updateCacti() {
+            for (let i = cacti.length - 1; i >= 0; i--) {
+                cacti[i].x -= gameSpeed;
                 
-                <div class="project-card" id="snake">
-                    <div class="project-image">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
-                    <div class="project-content">
-                        <h3>Игра "Змейка"</h3>
-                        <p>Классическая игра с подсчетом очков и увеличивающейся сложностью. Работа с массивами и таймерами.</p>
-                        <ul class="project-tech">
-                            <li>JavaScript</li>
-                            <li>Логика игры</li>
-                            <li>ООП</li>
-                        </ul>
-                    </div>
-                </div>
+                // Проверка столкновения
+                if (!cacti[i].passed && 
+                    dino.x < cacti[i].x + cacti[i].width &&
+                    dino.right > cacti[i].x &&
+                    dino.y < cacti[i].y + cacti[i].height &&
+                    dino.bottom > cacti[i].y) {
+                    gameOver();
+                }
                 
-                <div class="project-card" id="modern-site">
-                    <div class="project-image">
-                        <i class="fas fa-desktop"></i>
-                    </div>
-                    <div class="project-content">
-                        <h3>Современный сайт</h3>
-                        <p>Адаптивный лендинг с анимациями, слайдером и формой обратной связи. Готовый проект для портфолио.</p>
-                        <ul class="project-tech">
-                            <li>Адаптивный дизайн</li>
-                            <li>CSS Grid/Flexbox</li>
-                            <li>Интерактивность</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                // Увеличение счета при прохождении кактуса
+                if (!cacti[i].passed && cacti[i].x + cacti[i].width < dino.x) {
+                    cacti[i].passed = true;
+                    score += 1;
+                    scoreElement.textContent = score;
+                    
+                    // Увеличение скорости каждые 10 очков
+                    if (score % 10 === 0) {
+                        gameSpeed += 0.5;
+                    }
+                }
+                
+                // Удаление вышедших за пределы кактусов
+                if (cacti[i].x + cacti[i].width < 0) {
+                    cacti.splice(i, 1);
+                }
+            }
+        }
 
-    <!-- Преподаватель -->
-    <section class="teacher-section" id="teacher">
-        <div class="container">
-            <h2 class="section-title">Ваш преподаватель</h2>
-            <div class="teacher-container">
-                <div class="teacher-photo">
-                    <img src="/Fed.jpg" alt="Преподаватель курса" id="teacherPhoto">
-                    <div class="teacher-social">
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
-                    </div>
-                </div>
-                <div class="teacher-info">
-                    <h3>Мелихов Фёдор Алексеевич</h3>
-                    <p class="teacher-title">Учитель информатики в основной и старшей школе</p>
-                    <p class="teacher-experience">Опыт работы: 12 лет</p>
-                    <div class="teacher-bio">
-                        <p>Опытный педагог с 12-летним стажем преподавания информатики и программирования. Специалист по подготовке школьников к диагностическим работам и олимпиадам по информационным технологиям. Разрабатывает авторские методики обучения, сочетающие практические IT-навыки с развитием функциональной грамотности.</p>
-                    </div>
-                    <div class="teacher-skills">
-                        <h4>Ключевые навыки:</h4>
-                        <div class="skills-list">
-                            <span>JavaScript/TypeScript</span>
-                            <span>React/Vue.js</span>
-                            <span>Responsive Design</span>
-                            <span>Web Performance</span>
-                            <span>CI/CD</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        function gameOver() {
+            isGameOver = true;
+            ctx.font = '30px Arial';
+            ctx.fillStyle = '#f72585';
+            ctx.fillText('Игра окончена!', canvas.width / 2 - 100, canvas.height / 2);
+            ctx.font = '20px Arial';
+            ctx.fillText('Нажмите R для перезапуска', canvas.width / 2 - 120, canvas.height / 2 + 40);
+        }
 
-    <!-- CTA секция -->
-    <section class="cta-section">
-        <div class="container">
-            <h2>Готовы начать карьеру в IT?</h2>
-            <p>Присоединяйтесь к следующему потоку. Старт: 16 февраля</p>
-            <a href="https://forms.yandex.ru/your-form-link" target="_blank" class="btn-primary btn-large">Записаться на курс</a>
-        </div>
-    </section>
+        function resetGame() {
+            score = 0;
+            gameSpeed = 5;
+            isGameOver = false;
+            cacti.length = 0;
+            dino.y = 200;
+            dino.jumping = false;
+            dino.velocity = 0;
+            gameFrame = 0;
+            scoreElement.textContent = score;
+        }
 
-    <!-- Футер -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h3>Курсы программирования</h3>
-                </div>
-                <div class="footer-links">
-                    <h4>Курс</h4>
-                    <ul>
-                        <li><a href="#about">Программа</a></li>
-                        <li><a href="#projects">Проекты</a></li>
-                        <li><a href="#teacher">Преподаватель</a></li>
-                    </ul>
-                </div>
-                <div class="footer-contact">
-                    <h4>Контакты</h4>
-                    <ul>
-                        <li><i class="fas fa-envelope"></i> melihov_fa@1532.msk.ru</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Курсы программирования. Все права защищены.</p>
-            </div>
-        </div>
-    </footer>
+        function gameLoop() {
+            if (isPaused || isGameOver) return;
+            
+            // Очистка канваса
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Рисование фона
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Земля
+            ctx.fillStyle = '#6c757d';
+            ctx.fillRect(0, 260, canvas.width, 40);
+            
+            // Обновление и рисование объектов
+            dino.update();
+            dino.draw();
+            
+            updateCacti();
+            drawCacti();
+            
+            // Создание новых кактусов
+            gameFrame++;
+            if (gameFrame % 90 === 0) {
+                createCactus();
+            }
+        }
 
-    <script src="script.js"></script>
+        // Управление
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (!isGameOver) dino.jump();
+            }
+            
+            if (e.code === 'KeyP') {
+                isPaused = !isPaused;
+                if (!isPaused && !isGameOver) {
+                    requestAnimationFrame(gameLoop);
+                }
+            }
+            
+            if (e.code === 'KeyR' && isGameOver) {
+                resetGame();
+            }
+        });
+
+        canvas.addEventListener('click', () => {
+            if (!isGameOver) dino.jump();
+        });
+
+        // Кнопки управления
+        document.getElementById('startBtn').addEventListener('click', () => {
+            resetGame();
+            isPaused = false;
+            gameLoop();
+        });
+
+        document.getElementById('jumpBtn').addEventListener('click', () => {
+            if (!isGameOver) dino.jump();
+        });
+
+        document.getElementById('pauseBtn').addEventListener('click', () => {
+            isPaused = !isPaused;
+            if (!isPaused && !isGameOver) {
+                gameLoop();
+            }
+        });
+
+        // Запуск игры
+        setInterval(() => {
+            if (!isPaused && !isGameOver) {
+                gameLoop();
+            }
+        }, 1000 / 60);
+    </script>
 </body>
 </html>
