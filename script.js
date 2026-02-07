@@ -1,95 +1,206 @@
+// Основной скрипт для сайта курсов программирования
+
 // Мобильное меню
-const menuToggle = document.querySelector('.menu-toggle');
-const navMenu = document.querySelector('.nav-menu');
-
-menuToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    menuToggle.innerHTML = navMenu.classList.contains('active') 
-        ? '<i class="fas fa-times"></i>' 
-        : '<i class="fas fa-bars"></i>';
-});
-
-// Закрытие меню при клике на ссылку
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+function initMobileMenu() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (!menuToggle || !navMenu) return;
+    
+    menuToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        const icon = menuToggle.querySelector('i');
+        if (icon) {
+            icon.className = navMenu.classList.contains('active') 
+                ? 'fas fa-times' 
+                : 'fas fa-bars';
+        }
     });
-});
+
+    // Закрытие меню при клике на ссылку
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            const icon = menuToggle.querySelector('i');
+            if (icon) icon.className = 'fas fa-bars';
+        });
+    });
+}
 
 // Плавная прокрутка
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        if(targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if(targetElement) {
-            window.scrollTo({
-                top: targetElement.offsetTop - 80,
-                behavior: 'smooth'
-            });
-        }
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            
+            // Пропускаем якорь "#" и внешние ссылки
+            if (targetId === '#' || targetId.includes('://')) return;
+            
+            e.preventDefault();
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                const offsetTop = targetElement.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
     });
-});
+}
 
 // Анимация при прокрутке
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if(entry.isIntersecting) {
-            entry.target.classList.add('animated');
-        }
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animated');
+            }
+        });
+    }, observerOptions);
+
+    // Наблюдаем за элементами для анимации
+    document.querySelectorAll('.about-card, .project-card, .code-block').forEach(card => {
+        observer.observe(card);
     });
-}, observerOptions);
+}
 
-// Наблюдаем за элементами для анимации
-document.querySelectorAll('.about-card, .project-card, .code-block').forEach(card => {
-    observer.observe(card);
-});
-
-// Замена фото преподавателя при ошибке загрузки
-const teacherPhoto = document.getElementById('teacherPhoto');
-if(teacherPhoto) {
+// Загрузка фото преподавателя с fallback
+function initTeacherPhoto() {
+    const teacherPhoto = document.getElementById('teacherPhoto');
+    if (!teacherPhoto) return;
+    
+    // Создаем fallback изображение заранее
+    const fallbackImg = new Image();
+    fallbackImg.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
+    
+    // Если основное изображение не загрузилось, используем fallback
     teacherPhoto.onerror = function() {
-        this.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
-        this.alt = 'Фото преподавателя (заглушка)';
+        this.onerror = null; // Предотвращаем бесконечный цикл
+        this.src = fallbackImg.src;
+        this.alt = 'Фото преподавателя';
     };
 }
 
 // Активная навигация при прокрутке
-window.addEventListener('scroll', () => {
-    let current = '';
-    const sections = document.querySelectorAll('section');
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
+function initActiveNavigation() {
+    function updateActiveNav() {
+        let current = '';
+        const sections = document.querySelectorAll('section[id]');
+        const scrollPosition = window.pageYOffset + 100;
         
-        if(pageYOffset >= (sectionTop - 100)) {
-            current = section.getAttribute('id');
-        }
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
+            link.classList.remove('active');
+            const href = link.getAttribute('href');
+            if (href === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    // Throttle для оптимизации скролла
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(updateActiveNav, 100);
     });
     
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.classList.remove('active');
-        if(link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
+    updateActiveNav(); // Инициализация при загрузке
+}
+
+// Аналитика для кнопок записи
+function initAnalytics() {
+    const registrationLinks = document.querySelectorAll('a[href*="forms.yandex.ru"], .btn-register');
+    registrationLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            console.log('Запись на курс:', link.textContent.trim());
+            
+            // Отправка события в Google Analytics (если подключен)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'registration_click', {
+                    'event_category': 'engagement',
+                    'event_label': link.textContent.trim()
+                });
+            }
+        });
     });
+}
+
+// Инициализация анимаций при загрузке
+function initLoadAnimations() {
+    setTimeout(() => {
+        document.querySelectorAll('.hero-content, .css-art-container').forEach(el => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        });
+    }, 300);
+}
+
+// Выпадающие меню на тач-устройствах
+function initTouchDropdowns() {
+    const dropdowns = document.querySelectorAll('.dropdown');
+    
+    dropdowns.forEach(dropdown => {
+        const toggle = dropdown.querySelector('.dropdown-toggle');
+        
+        toggle.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                dropdown.classList.toggle('open');
+            }
+        });
+        
+        // Закрытие при клике вне меню
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+    });
+}
+
+// Основная инициализация при загрузке DOM
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Сайт курсов программирования загружен!');
+    
+    initMobileMenu();
+    initSmoothScroll();
+    initScrollAnimations();
+    initTeacherPhoto();
+    initActiveNavigation();
+    initAnalytics();
+    initLoadAnimations();
+    initTouchDropdowns();
+    
+    // Добавляем класс для анимированных элементов после загрузки
+    document.body.classList.add('loaded');
 });
 
-// Имитация заполнения форм записи
-const registrationLinks = document.querySelectorAll('a[href*="forms.yandex.ru"]');
-registrationLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        console.log('Кликнута кнопка записи');
-        // Здесь можно добавить аналитику
-    });
+// Обработка ошибок
+window.addEventListener('error', function(e) {
+    console.error('Ошибка на странице:', e.error);
 });
+
+// Оптимизация для медленных сетей
+if ('connection' in navigator) {
+    const connection = navigator.connection;
+    if (connection.saveData === true || connection.effectiveType.includes('2g')) {
+        // Отключаем некоторые анимации для медленных соединений
+        document.documentElement.classList.add('save-data');
+    }
+}
