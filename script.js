@@ -141,6 +141,38 @@ function initAnalytics() {
     });
 }
 
+// Аналитика для проектов
+function initProjectAnalytics() {
+    const projectLinks = document.querySelectorAll('.project-card-link');
+    
+    projectLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const projectName = this.closest('.project-card').querySelector('h3').textContent;
+            const projectUrl = this.href;
+            
+            console.log('Открыт проект:', projectName, 'URL:', projectUrl);
+            
+            // Отправка события в Google Analytics (если подключен)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'project_open', {
+                    'event_category': 'projects',
+                    'event_label': projectName,
+                    'transport_type': 'beacon'
+                });
+            }
+            
+            // Сохранение в localStorage для аналитики
+            try {
+                const projectStats = JSON.parse(localStorage.getItem('project_stats') || '{}');
+                projectStats[projectName] = (projectStats[projectName] || 0) + 1;
+                localStorage.setItem('project_stats', JSON.stringify(projectStats));
+            } catch (error) {
+                console.log('Не удалось сохранить статистику проектов');
+            }
+        });
+    });
+}
+
 // Инициализация анимаций при загрузке
 function initLoadAnimations() {
     setTimeout(() => {
@@ -174,6 +206,15 @@ function initTouchDropdowns() {
     });
 }
 
+// Добавление rel="noopener" для внешних ссылок
+function addSecurityAttributes() {
+    document.querySelectorAll('a[target="_blank"]').forEach(link => {
+        if (!link.rel.includes('noopener')) {
+            link.rel = link.rel ? link.rel + ' noopener' : 'noopener';
+        }
+    });
+}
+
 // Основная инициализация при загрузке DOM
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Сайт курсов программирования загружен!');
@@ -184,8 +225,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initTeacherPhoto();
     initActiveNavigation();
     initAnalytics();
+    initProjectAnalytics();
     initLoadAnimations();
     initTouchDropdowns();
+    addSecurityAttributes();
     
     // Добавляем класс для анимированных элементов после загрузки
     document.body.classList.add('loaded');
