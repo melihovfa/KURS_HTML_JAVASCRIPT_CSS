@@ -87,6 +87,13 @@ p {
     border-radius: 2px;
 }
 
+.section-subtitle {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 50px;
+    font-size: 1.1rem;
+}
+
 /* Кнопки */
 .btn-primary, .btn-secondary, .btn-register {
     display: inline-block;
@@ -185,6 +192,14 @@ p {
     color: var(--primary);
 }
 
+.nav-links a.active {
+    color: var(--primary);
+}
+
+.nav-links a.active::after {
+    width: 100%;
+}
+
 .nav-links a::after {
     content: '';
     position: absolute;
@@ -209,58 +224,6 @@ p {
     display: flex;
     align-items: center;
     gap: 5px;
-}
-/* Стиль для ссылки-карточки */
-.project-card-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.3s ease;
-}
-
-/* Убираем все подчеркивания внутри карточки */
-.project-card-link * {
-    text-decoration: none !important;
-}
-
-/* Убираем стандартные стили ссылок */
-.project-card-link,
-.project-card-link:hover,
-.project-card-link:focus,
-.project-card-link:active {
-    text-decoration: none !important;
-    outline: none !important;
-    border: none !important;
-}
-
-/* Hover эффект для карточки */
-.project-card-link:hover .project-card {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-}
-
-/* Убираем подчеркивание у заголовков */
-.project-card-link h3 {
-    text-decoration: none !important;
-    border-bottom: none !important;
-}
-
-/* Убираем подчеркивание у параграфов */
-.project-card-link p {
-    text-decoration: none !important;
-}
-
-/* Убираем подчеркивание у списков */
-.project-card-link ul,
-.project-card-link li {
-    text-decoration: none !important;
-}
-
-/* Убираем подчеркивание при фокусе */
-.project-card-link:focus h3,
-.project-card-link:focus p,
-.project-card-link:focus ul {
-    text-decoration: none !important;
 }
 
 .dropdown-menu {
@@ -319,6 +282,20 @@ p {
     grid-template-columns: 1fr 1fr;
     gap: 60px;
     align-items: center;
+}
+
+.hero-content, .css-art-container {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.hero-content {
+    transition-delay: 0.2s;
+}
+
+.css-art-container {
+    transition-delay: 0.4s;
 }
 
 .hero-title span {
@@ -537,13 +514,6 @@ p {
 }
 
 /* Проекты */
-.section-subtitle {
-    text-align: center;
-    max-width: 700px;
-    margin: 0 auto 50px;
-    font-size: 1.1rem;
-}
-
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -560,6 +530,16 @@ p {
 
 .project-card:hover {
     transform: translateY(-10px);
+}
+
+.project-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.project-card-link:hover {
+    text-decoration: none;
 }
 
 .project-image {
@@ -592,6 +572,21 @@ p {
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 0.9rem;
+}
+
+.project-link-hint {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.project-card:hover .project-link-hint {
+    opacity: 1;
+    transform: translateX(5px);
 }
 
 /* Преподаватель */
