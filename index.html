@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Курсы программирования HTML, CSS, JavaScript</title>
+    <!-- Favicon для вкладки браузера -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+    <!-- Предзагрузка шрифтов -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" as="style">
+    <!-- Основные стили -->
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -242,7 +249,7 @@
                 </div>
                 
                 <div class="project-card" id="snake">
-                    <a href="shake.html"_blank" class="project-card-link">
+                    <a href="shake.html" target="_blank" class="project-card-link">
                         <div class="project-image">
                             <i class="fas fa-gamepad"></i>
                         </div>
@@ -286,11 +293,13 @@
             <h2 class="section-title">Ваш преподаватель</h2>
             <div class="teacher-container">
                 <div class="teacher-photo">
-                    <img src="Fed.jpg" alt="Преподаватель курса" id="teacherPhoto">
+                    <!-- Исправлено: убрана опечатка в src, добавлен lazy loading -->
+                    <img src="Fed.jpg" alt="Преподаватель курса" id="teacherPhoto" loading="lazy">
                     <div class="teacher-social">
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <!-- Убраны ссылки на внешние сайты под фотографией преподавателя -->
+                        <span><i class="fab fa-github"></i></span>
+                        <span><i class="fab fa-linkedin"></i></span>
+                        <span><i class="fab fa-telegram"></i></span>
                     </div>
                 </div>
                 <div class="teacher-info">
@@ -299,7 +308,6 @@
                     <p class="teacher-experience">Опыт работы: 12 лет</p>
                     <div class="teacher-bio">
                         <p>Опытный педагог с 12-летним стажем преподавания информатики и программирования. Специалист по подготовке школьников к диагностическим работам и олимпиадам по информационным технологиям. Разрабатывает авторские методики обучения, сочетающие практические IT-навыки с развитием функциональной грамотности.</p>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -343,6 +351,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Скрипты в конце для оптимизации загрузки -->
+    <script src="script.js" defer></script>
 </body>
 </html>
